@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<!-- Это магическая строка, которая говорит браузеру: "Эй, это современный HTML5 документ!" -->
+<html lang="ru">
+<!-- Говорим браузеру, что наш сайт на русском языке (было en, стало ru) -->
+
+<head>
+    <!-- Голова сайта - тут невидимые настройки, как инструкция для браузера -->
+
+    <meta charset="UTF-8">
+    <!-- Волшебный алфавит, чтобы русские буквы не превращались в кракозябры -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Заговор для телефонов: "Растянись на весь экран и не будь мелким!" -->
+
+    <title>Моя Игра</title>
+    <!-- Название вкладки в браузере -->
+
+    <!-- Подключаем Bootstrap 5 - модную библиотеку красоты -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Это как волшебная палочка - одна строчка, и сайт становится красивым -->
+
+    <!-- Подключаем иконки Bootstrap - маленькие картинки для кнопок -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- Наши собственные стили для дополнительной красоты -->
+    <style>
+        /* Это наш секретный рецепт красоты */
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /* Волшебный градиентный фон от синего к фиолетовому */
+            min-height: 100vh;
+            /* Заставляем фон быть не меньше высоты экрана */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Красивый современный шрифт */
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            /* Делаем название жирным */
+            font-size: 1.5rem;
+            /* Немного увеличиваем размер */
+        }
+
+        .nav-link {
+            transition: all 0.3s ease;
+            /* Плавные переходы при наведении */
+            border-radius: 5px;
+            /* Закругляем уголки */
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            /* При наведении слегка подсвечиваем */
+            transform: translateY(-2px);
+            /* Немного поднимаем кнопку */
+        }
+
+        .main-container {
+            background-color: white;
+            /* Белый фон для контента */
+            border-radius: 20px;
+            /* Закругляем уголки */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            /* Добавляем тень для объема */
+            padding: 30px;
+            /* Отступы внутри контейнера */
+            margin-top: 30px;
+            /* Отступ сверху */
+        }
+
+        .flash-message {
+            border-left: 5px solid #667eea;
+            /* Синяя полоска слева для красоты */
+            animation: fadeIn 0.5s ease;
+            /* Плавное появление */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Анимация плавного появления */
+
+        .btn-custom {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            /* Красивая градиентная кнопка */
+            color: white;
+            /* Белый текст на кнопке */
+            border: none;
+            /* Убираем стандартную рамку */
+            transition: all 0.3s ease;
+            /* Плавные переходы */
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-3px);
+            /* Поднимаем кнопку при наведении */
+            box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+            /* Добавляем тень */
+            color: white;
+            /* Текст остается белым */
+        }
+
+        .footer {
+            color: rgba(255, 255, 255, 0.7);
+            /* Полупрозрачный белый текст */
+            margin-top: 50px;
+            /* Отступ сверху */
+            padding: 20px;
+            /* Отступы внутри */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Тело сайта - тут всё, что видят люди -->
+
+    <!-- Навигационная панель - меню сайта -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <!-- navbar - это навигация, expand-lg - раскрывается на больших экранах, dark - темная тема -->
+
+        <div class="container">
+            <!-- Контейнер, чтобы содержимое не растягивалось на весь экран -->
+
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="bi bi-controller me-2"></i>Моя Игра
+                <!-- Иконка геймпада и название сайта -->
+            </a>
+
+            <!-- Кнопка-гамбургер для мобильных устройств -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <!-- При нажатии на телефоне покажет меню -->
+                <span class="navbar-toggler-icon"></span>
+                <!-- Три полосочки - значок меню -->
+            </button>
+
+            <!-- Само меню -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <!-- ms-auto - выравнивание меню по правому краю -->
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">
+                            <i class="bi bi-house-door me-1"></i>Игра
+                            <!-- Иконка домика и текст -->
+                        </a>
+                    </li>
+
+                    <!-- Проверяем, вошел ли пользователь в аккаунт -->
+                    {% if current_user.is_authenticated %}
+                    <!-- Если пользователь вошел -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">
+                            <i class="bi bi-box-arrow-right me-1"></i>Выход
+                            <!-- Иконка выхода и текст -->
+                        </a>
+                    </li>
+                    {% else %}
+                    <!-- Если пользователь НЕ вошел -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('login') }}">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Вход
+                            <!-- Иконка входа и текст -->
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('register') }}">
+                            <i class="bi bi-person-plus me-1"></i>Регистрация
+                            <!-- Иконка добавления пользователя и текст -->
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной контент страницы -->
+    <div class="container main-container">
+        <!-- Контейнер с белым фоном и скругленными углами -->
+
+        <!-- Блок для всплывающих сообщений (например, "Вы успешно вошли!") -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        <!-- Получаем все сообщения с их категориями (success, danger, warning, info) -->
+
+        {% if messages %}
+        <!-- Если есть сообщения для показа -->
+        <div class="mb-4">
+            <!-- mb-4 - отступ снизу -->
+
+            {% for category, message in messages %}
+            <!-- Перебираем все сообщения -->
+
+            <div class="alert alert-{{ category if category != 'message' else 'info' }} flash-message alert-dismissible fade show" role="alert">
+                <!-- alert - блок сообщения, alert-dismissible - можно закрыть, fade show - плавное появление -->
+
+                {{ message }}
+                <!-- Само сообщение -->
+
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <!-- Крестик для закрытия сообщения -->
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- Место для основного содержимого страниц -->
+        {% block content %}
+        <!-- Сюда будут вставляться разные страницы: игра, вход, регистрация -->
+
+        <!-- По умолчанию показываем приветствие -->
+        <div class="text-center py-5">
+            <!-- text-center - выравнивание по центру, py-5 - большие отступы сверху и снизу -->
+
+            <h1 class="display-4 mb-4">Добро пожаловать в игру!</h1>
+            <!-- display-4 - очень большой красивый заголовок -->
+
+            <p class="lead mb-4">
+                Это современный шаблон для вашей игры. Здесь можно разместить правила, описание или что-то интересное.
+            </p>
+            <!-- lead - стиль для ведущего абзаца -->
+
+            <div class="mt-5">
+                <!-- mt-5 - большой отступ сверху -->
+                {% if current_user.is_authenticated %}
+                <!-- Если пользователь вошел -->
+                <a href="{{ url_for('index') }}" class="btn btn-custom btn-lg px-5">
+                    <i class="bi bi-play-circle me-2"></i>Начать игру
+                </a>
+                {% else %}
+                <!-- Если пользователь НЕ вошел -->
+                <a href="{{ url_for('login') }}" class="btn btn-custom btn-lg px-5 me-3">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Войти в аккаунт
+                </a>
+                <a href="{{ url_for('register') }}" class="btn btn-outline-primary btn-lg px-5">
+                    <i class="bi bi-person-plus me-2"></i>Зарегистрироваться
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endblock %}
+    </div>
+
+    <!-- Подвал сайта -->
+    <footer class="footer text-center">
+        <div class="container">
+            <hr class="my-4" style="border-color: rgba(255, 255, 255, 0.1);">
+            <!-- Разделительная линия -->
+
+            <p class="mb-0">
+                <i class="bi bi-code-slash me-1"></i>Сделано с ❤️ и Bootstrap 5
+                <!-- Иконка кода и текст -->
+            </p>
+            <small>© 2023 Моя Игра. Все права защищены.</small>
+        </div>
+    </footer>
+
+    <!-- Подключаем JavaScript Bootstrap для волшебных анимаций -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Это скрипт, который делает кнопку-гамбургер и закрывающиеся сообщения рабочими -->
+
+    <!-- Небольшой дополнительный JavaScript для плавности -->
+    <script>
+        // Когда страница полностью загрузится
+        document.addEventListener('DOMContentLoaded', function() {
+            // Делаем плавную прокрутку для всех ссылок, начинающихся с #
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Плавно прокручиваем к элементу
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Автоматически скрываем всплывающие сообщения через 5 секунд
+            setTimeout(function() {
+                var alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function(alert) {
+                    var bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

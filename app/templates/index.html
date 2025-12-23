@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+<!-- Говорим Джанго/Фласку: используй base.html как основу -->
+
+{% block content %}
+<!-- Начинаем блок, который вставится в base.html -->
+
+<div class="container mt-4">
+    <!-- container - ограничивает ширину и центрирует -->
+    <!-- mt-4 - средний отступ сверху -->
+
+    <div class="row justify-content-center">
+        <!-- row - строка сетки Bootstrap -->
+        <!-- justify-content-center - центрируем содержимое -->
+
+        <div class="col-md-6">
+            <!-- col-md-6 - на средних экранах занимает 6 колонок из 12 -->
+
+            <div class="card">
+                <!-- card - компонент карточки Bootstrap -->
+
+                <div class="card-header bg-primary text-white text-center">
+                    <!-- card-header - верхняя часть карточки -->
+                    <!-- bg-primary - синий фон -->
+                    <!-- text-white - белый текст -->
+                    <!-- text-center - выравнивание по центру -->
+
+                    <h2 class="mb-0">
+                        <!-- mb-0 - убираем отступ снизу -->
+                        Кликер!
+                        <!-- Заголовок страницы -->
+                    </h2>
+                </div>
+
+                <div class="card-body text-center">
+                    <!-- card-body - основная часть карточки -->
+                    <!-- text-center - текст по центру -->
+
+                    <h4 class="mb-4">
+                        <!-- mb-4 - большой отступ снизу -->
+                        Количество кликов
+                        <!-- Подпись для счетчика -->
+                    </h4>
+
+                    <div class="display-4 text-primary mb-4">
+                        <!-- display-4 - очень большой текст -->
+                        <!-- text-primary - синий цвет -->
+                        <!-- mb-4 - большой отступ снизу -->
+                        {{ current_user.clicks }}
+                        <!-- Показываем количество кликов пользователя -->
+                    </div>
+
+                    <a href="{{ url_for('click') }}" class="btn btn-success btn-lg">
+                        <!-- btn btn-success btn-lg - большая зеленая кнопка -->
+                        <!-- href="{{ url_for('click') }}" - ссылка на обработчик кликов -->
+                        Кнопка
+                        <!-- Текст на кнопке -->
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+<!-- Конец блока content -->
