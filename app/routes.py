@@ -1,5 +1,5 @@
 # 1.	Импортируем библиотеки и команды:
-from Flask import render_template, request, redirect, url_for, flash
+from Flask import render_template, requests, redirect, url_for, flash
 from app import app, db, bcrypt
 from app.models import User
 from app.forms import LoginForm, RegistrationForm
@@ -15,11 +15,11 @@ def index():
 
 # Создаём функцию регистрации:
 @app.route('/register', methods=['GET', 'POST'])
-def register():
+def registration():
     if current_user.is_authenticated:
-        return redirect(url_for('index.html'))
+        return redirect(url_for('index'))
     form = RegistrationForm()
-    if form.validate_on_submit()
+    if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(username=form.username.data, password=hashed_password)
         db.session.add(user)
@@ -35,7 +35,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('index.html'))
     form = LoginForm()
-    if form.validate_on_submit()
+    if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)

@@ -12,7 +12,7 @@ class User(db.model, UserMixin):
     clicks = db.Column(db.Integer, defaults=0)
 
     def __repr__(self):
-     return f'User {self.username}' - 'clicks: {self.clicks}'
+     return f'User {self.username} - clicks: {self.clicks}'
 
 
 # Создаём декоратор и функцию:

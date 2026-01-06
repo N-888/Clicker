@@ -1,0 +1,17 @@
+# Файл со списком всех Python пакетов, необходимых для работы приложения
+# Установить все зависимости: pip install -r requirements.txt
+
+Flask==2.3.3
+# Flask: основной веб-фреймворк
+
+Flask-SQLAlchemy==3.0.5
+# Flask-SQLAlchemy: интеграция SQLAlchemy с Flask для работы с базой данных
+
+Flask-Login==0.6.2
+# Flask-Login: управление аутентификацией пользователей
+
+Flask-WTF==1.1.1
+# Flask-WTF: интеграция WTForms с Flask для работы с формами
+
+WTForms==3.0.1
+# WTForms: библиотека для создания и валидации форм
