@@ -82,7 +82,7 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         """
-        Проверяет, соответствует ли предоставленный пароль хешу в базе данных.
+        Проверяет, соответствует ли предоставленный пароль хешу в базе дан-ных.
 
         Args:
             password (str): Пароль для проверки
@@ -93,6 +93,18 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
         # check_password_hash: сравнивает пароль с хешем
         # Возвращает True если совпадает, False если нет
+
+    def get_id(self):
+        """
+        Возвращает ID пользователя в виде строки.
+        Требуется Flask-Login для работы с сессиями.
+
+        Returns:
+            str: ID пользователя как строка
+        """
+        # Flask-Login требует, чтобы get_id() возвращал строку
+        # Преобразуем числовой id в строку с помощью str()
+        return str(self.id)
 
     def __repr__(self):
         """

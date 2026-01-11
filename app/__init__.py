@@ -6,85 +6,53 @@
 Этот файл создает и настраивает экземпляр Flask приложения.
 """
 
-# Импортируем основной класс Flask
 from flask import Flask
-# Flask: основной класс веб-фреймворка
-
-# Импортируем SQLAlchemy для работы с базой данных
 from flask_sqlalchemy import SQLAlchemy
-# SQLAlchemy: ORM (Object-Relational Mapping) для работы с БД
-
-# Импортируем LoginManager для управления аутентификацией пользователей
 from flask_login import LoginManager
-# LoginManager: система входа/выхода пользователей
-
-# Импортируем os для работы с переменными окружения
 import os
 
-# os: модуль для работы с операционной системой
+# Создаем экземпляр базы данных
+db = SQLAlchemy()
 
-# Создаем экземпляр базы данных (пока пустой, будет инициализирован позже)
-from flask_sqlalchemy import SQLAlchemy
-db = SQLAlchemy()  # ✅ Глобальная переменная
-# db: объект для работы с базой данных
-
-
-# Создаем менеджер аутентификации (пока пустой, будет инициализирован позже)
+# Создаем менеджер аутентификации
 login_manager = LoginManager()
-# login_manager: объект для управления сессиями пользователей
 
-# ВАЖНО: Создаем глобальную переменную app, но она будет инициализирована только после вызова create_app()
-# Это нужно для того, чтобы routes.py мог импортировать app
+# Глобальная переменная app (будет инициализирована в create_app)
 app = None
 
-
-# Изначально app = None, потом будет создан
 
 def create_app():
     """
     Фабричная функция для создания Flask приложения.
-    Это стандартный подход для создания приложений Flask.
-
-    Returns:
-        Flask: Экземпляр Flask приложения
     """
-
-    # Создаем экземпляр Flask приложения
-    global app  # Объявляем, что будем использовать глобальную переменную app
+    global app
     app = Flask(__name__)
-    # __name__: имя текущего модуля (нужно Flask для нахождения ресурсов)
 
-    # Настраиваем конфигурацию приложения
+    # Настройки конфигурации
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-123')
-    # SECRET_KEY: секретный ключ для защиты cookies и сессий
-    # os.environ.get(): пытаемся получить ключ из переменных окружения, иначе используем дефолтный
-
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///clicker.db'
-    # SQLALCHEMY_DATABASE_URI: путь к базе данных SQLite
-    # sqlite:///clicker.db: создаст файл clicker.db в корне проекта
-
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    # Отключаем отслеживание изменений объектов (экономит память)
 
-    # Инициализируем расширения с нашим приложением
+    # Инициализируем расширения
     db.init_app(app)
-    # Привязываем базу данных к нашему приложению
-
     login_manager.init_app(app)
-    # Привязываем менеджер аутентификации к приложению
 
-    login_manager.login_view = 'login'
-    # Указываем, какой endpoint (маршрут) использовать для страницы входа
-    # 'login' - это имя функции в routes.py
-
+    # Настройки Flask-Login
+    login_manager.login_view = 'login'  # Страница для входа
     login_manager.login_message = 'Пожалуйста, войдите в систему для доступа к этой странице.'
-    # Сообщение, которое показывается неавторизованным пользователям
+    login_manager.login_message_category = 'info'
 
-    # Импортируем маршруты ПОСЛЕ создания приложения (важно для избежания циклических импортов)
+    # ВАЖНО: Функция для загрузки пользователя (user_loader)
+    @login_manager.user_loader
+    def load_user(user_id):
+        """
+        Загружает пользователя по ID из сессии.
+        Flask-Login вызывает эту функцию при каждом запросе.
+        """
+        from app.models import User
+        return User.query.get(int(user_id))
+
+    # Импортируем маршруты
     from app import routes
-    # Импортируем модуль routes из текущего пакета (app)
-    # Это нужно делать здесь, а не вверху файла!
 
-    # Возвращаем созданное и настроенное приложение
     return app
-    # Возвращаем готовый объект Flask приложения
