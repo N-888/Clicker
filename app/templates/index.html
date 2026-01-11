@@ -1,56 +1,87 @@
 {% extends 'base.html' %}
-<!-- Используем базовый шаблон base.html -->
+
+{% block title %}Кликер Игра - Главная{% endblock %}
 
 {% block content %}
-<!-- Начинаем основной блок контента страницы -->
+<div class="container text-center py-5">
+    <h1 class="display-4 mb-4">🎮 Добро пожаловать в Кликер Игру!</h1>
 
-<div class="container mt-5">
-    <!-- Создаем контейнер Bootstrap с отступом сверху -->
+    <p class="lead mb-5">
+        Нажимай, зарабатывай очки и соревнуйся с другими игроками!
+    </p>
 
-    <div class="row justify-content-center">
-        <!-- Создаем строку сетки Bootstrap и центрируем ее содержимое -->
+    {% if current_user.is_authenticated %}
+        <!-- Если пользователь авторизован -->
+        <div class="card shadow-lg mb-4">
+            <div class="card-body">
+                <h3 class="card-title">Привет, {{ current_user.username }}! 👋</h3>
 
-        <div class="col-md-8 col-lg-6">
-            <!-- Создаем колонку: на средних экранах 8/12, на больших 6/12 -->
-
-            <div class="card shadow-lg border-0">
-                <!-- Создаем карточку с большой тенью и без границ -->
-
-                <div class="card-header bg-primary text-white text-center py-4">
-                    <!-- Верхняя часть карточки: синий фон, белый текст, центрирование, большие отступы -->
-                    <h1 class="display-5 fw-bold mb-0">
-                        <!-- Большой жирный заголовок без отступа снизу -->
-                        Привет!
-                        <!-- Текст приветствия -->
-                    </h1>
-                </div>
-
-                <div class="card-body text-center py-5">
-                    <!-- Основная часть карточки: центрированный текст, большие вертикальные отступы -->
-
-                    <h3 class="text-muted mb-4">
-                        <!-- Подзаголовок серого цвета с отступом снизу -->
-                        Количество кликов
-                        <!-- Текст подзаголовка -->
-                    </h3>
-
-                    <div class="display-3 text-primary fw-bold mb-5">
-                        <!-- Очень крупный текст синего цвета жирным начертанием -->
-                        {{ current_user.clicks }}
-                        <!-- Вывод количества кликов текущего пользователя -->
+                <div class="row mt-4">
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 bg-primary bg-opacity-10 rounded">
+                            <h5>Клики</h5>
+                            <h2 class="text-primary">{{ current_user.clicks }}</h2>
+                        </div>
                     </div>
 
-                    <a href="{{ url_for('click') }}"
-                       class="btn btn-success btn-lg px-5 py-3 fw-bold">
-                        <!-- Большая зеленая кнопка с жирным текстом и дополнительными отступами -->
-                        Кнопка
-                        <!-- Текст на кнопке -->
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 bg-success bg-opacity-10 rounded">
+                            <h5>Монеты</h5>
+                            <h2 class="text-success">{{ current_user.coins }}</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 bg-warning bg-opacity-10 rounded">
+                            <h5>Уровень</h5>
+                            <h2 class="text-warning">{{ current_user.level }}</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('click') }}" class="btn btn-primary btn-lg mt-3">
+                    <i class="bi bi-mouse"></i> Кликнуть!
+                </a>
+            </div>
+        </div>
+    {% else %}
+        <!-- Если пользователь НЕ авторизован -->
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <h3 class="card-title mb-4">Начни играть прямо сейчас!</h3>
+
+                <div class="d-grid gap-3 col-md-6 mx-auto">
+                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-box-arrow-in-right"></i> Войти в игру
                     </a>
+
+                    <a href="{{ url_for('register') }}" class="btn btn-success btn-lg">
+                        <i class="bi bi-person-plus"></i> Зарегистрироваться
+                    </a>
+                </div>
+
+                <div class="mt-5">
+                    <h4>🎯 Почему стоит играть?</h4>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <i class="bi bi-trophy fs-1 text-primary"></i>
+                            <h5>Рейтинги</h5>
+                            <p>Соревнуйся с другими</p>
+                        </div>
+                        <div class="col-md-4">
+                            <i class="bi bi-graph-up fs-1 text-success"></i>
+                            <h5>Прогресс</h5>
+                            <p>Отслеживай достижения</p>
+                        </div>
+                        <div class="col-md-4">
+                            <i class="bi bi-award fs-1 text-warning"></i>
+                            <h5>Награды</h5>
+                            <p>Получай достижения</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 </div>
-
 {% endblock %}
-<!-- Конец блока контента -->

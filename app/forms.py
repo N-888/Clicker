@@ -1,23 +1,90 @@
+# -*- coding: utf-8 -*-
+# Указываем кодировку UTF-8 для поддержки русских символов
+
+"""
+Формы Flask-WTF.
+Здесь определяются формы для ввода данных пользователем.
+"""
+
+# Импортируем FlaskForm - базовый класс для форм
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
+# FlaskForm: обеспечивает интеграцию WTForms с Flask
 
-from app.models import User
+# Импортируем типы полей из WTForms
+from wtforms import StringField, PasswordField, SubmitField
+# StringField: текстовое поле (для имени пользователя, email и т.д.)
+# PasswordField: поле для ввода пароля (текст скрывается звездочками)
+# SubmitField: кнопка отправки формы
 
-# 2 usage
-class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=35)])
-    password = PasswordField('Password', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Регистрация')
+# Импортируем валидаторы для проверки введенных данных
+from wtforms.validators import DataRequired, Length, EqualTo
 
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError('Такое имя уже существует.')
 
-# 1 usage
+# DataRequired: проверяет, что поле не пустое
+# Length: проверяет длину введенного текста
+# EqualTo: проверяет, что значение одного поля равно значению другого
+
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Вход')
+    """
+    Форма для входа в систему.
+    Используется на странице /login.
+    """
+
+    # Поле для ввода имени пользователя
+    username = StringField('Имя пользователя', validators=[
+        # 'Имя пользователя' - текст метки (лейбла) поля
+        DataRequired(message="Введите имя пользователя"),
+        # DataRequired: поле обязательно для заполнения
+        # message: сообщение об ошибке, если поле пустое
+
+        Length(min=3, max=20, message="Имя должно быть от 3 до 20 символов")
+        # Length: проверяет длину текста
+        # min=3: минимальная длина 3 символа
+        # max=20: максимальная длина 20 символов
+    ])
+
+    # Поле для ввода пароля
+    password = PasswordField('Пароль', validators=[
+        # 'Пароль' - текст метки (лейбла) поля
+        DataRequired(message="Введите пароль")
+        # Поле обязательно для заполнения
+    ])
+
+    # Кнопка для отправки формы
+    submit = SubmitField('Войти')
+    # 'Войти' - текст на кнопке
+
+
+class RegisterForm(FlaskForm):
+    """
+    Форма для регистрации нового пользователя.
+    Используется на странице /register.
+    """
+
+    # Поле для ввода имени пользователя (аналогично LoginForm)
+    username = StringField('Имя пользователя', validators=[
+        DataRequired(message="Введите имя пользователя"),
+        Length(min=3, max=20, message="Имя должно быть от 3 до 20 символов")
+    ])
+
+    # Поле для ввода пароля
+    password = PasswordField('Пароль', validators=[
+        DataRequired(message="Введите пароль"),
+        Length(min=6, message="Пароль должен быть не менее 6 символов")
+        # min=6: минимальная длина пароля 6 символов (для безопасности)
+    ])
+
+    # Поле для подтверждения пароля (пользователь вводит пароль второй раз)
+    confirm_password = PasswordField('Подтверждение пароля', validators=[
+        # 'Подтверждение пароля' - текст метки поля
+        DataRequired(message="Подтвердите пароль"),
+        # Поле обязательно для заполнения
+
+        EqualTo('password', message="Пароли должны совпадать")
+        # EqualTo: проверяет, что значение этого поля равно значению поля 'password'
+        # 'password' - имя поля, с которым сравниваем
+    ])
+
+    # Кнопка для отправки формы регистрации
+    submit = SubmitField('Зарегистрироваться')
+    # 'Зарегистрироваться' - текст на кнопке

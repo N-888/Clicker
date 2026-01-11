@@ -1,22 +1,138 @@
 {% extends 'base.html' %}
+<!-- Наследуем базовый шаблон -->
+
+{% block title %}Регистрация - Кликер Игра{% endblock %}
+<!-- Заголовок страницы -->
+
 {% block content %}
-    <h1>Регистрация</h1>
-    <form method="post" action="{{ url_for('register')}}">
-        {{ form.hidden_tag() }}
-        <div>
-            {{ form.username.label }}
-            {{ form.username }}
+<!-- Основное содержимое страницы -->
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Карточка регистрации -->
+            <div class="card shadow">
+                <!-- Заголовок карточки -->
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-person-plus"></i> Регистрация
+                    </h3>
+                    <p class="mb-0 small mt-2">Создайте аккаунт для сохранения прогресса</p>
+                </div>
+
+                <!-- Тело карточки -->
+                <div class="card-body p-4">
+                    <!-- Форма регистрации -->
+                    <form method="POST" action="">
+                        <!-- CSRF токен для защиты -->
+                        {{ form.hidden_tag() }}
+
+                        <!-- Поле: Имя пользователя -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-person"></i> {{ form.username.label }}
+                            </label>
+                            {{ form.username(class="form-control", placeholder="Введите имя пользователя (3-20 символов)") }}
+
+                            {% if form.username.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.username.errors %}
+                                <i class="bi bi-exclamation-circle"></i> {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Поле: Пароль -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-lock"></i> {{ form.password.label }}
+                            </label>
+                            {{ form.password(class="form-control", placeholder="Введите пароль (минимум 6 символов)") }}
+
+                            {% if form.password.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.password.errors %}
+                                <i class="bi bi-exclamation-circle"></i> {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Поле: Подтверждение пароля -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-lock-fill"></i> {{ form.confirm_password.label }}
+                            </label>
+                            {{ form.confirm_password(class="form-control", placeholder="Повторите пароль") }}
+
+                            {% if form.confirm_password.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.confirm_password.errors %}
+                                <i class="bi bi-exclamation-circle"></i> {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Кнопка отправки -->
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-success btn-lg") }}
+                        </div>
+                    </form>
+
+                    <!-- Ссылки -->
+                    <div class="mt-4 text-center">
+                        <p class="mb-2">
+                            Уже есть аккаунт?
+                            <a href="{{ url_for('login') }}" class="text-decoration-none fw-bold">
+                                Войдите здесь
+                            </a>
+                        </p>
+                        <p class="mb-0">
+                            <a href="{{ url_for('index') }}" class="text-decoration-none">
+                                <i class="bi bi-arrow-left"></i> Вернуться на главную
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Преимущества регистрации -->
+            <div class="row mt-4">
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-trophy display-6 text-primary mb-3"></i>
+                            <h5>Рейтинги</h5>
+                            <p class="small">Соревнуйтесь с другими игроками</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-graph-up display-6 text-success mb-3"></i>
+                            <h5>Прогресс</h5>
+                            <p class="small">Отслеживайте свои достижения</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-award display-6 text-warning mb-3"></i>
+                            <h5>Награды</h5>
+                            <p class="small">Получайте достижения за игру</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            {{ form.password.label }}
-            {{ form.password }}
-        </div>
-        <div>
-            {{ form.confirm_password.label }}
-            {{ form.confirm_password }}
-        </div>
-        <div>
-            {{ form.submit }}
-        </div>
-    </form>
+    </div>
+</div>
+
 {% endblock %}
+<!-- Конец основного содержимого -->

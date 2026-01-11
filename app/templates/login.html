@@ -1,18 +1,72 @@
 {% extends 'base.html' %}
+
+{% block title %}Вход - Кликер Игра{% endblock %}
+
 {% block content %}
-    <h1>Вход</h1>
-    <form method="post" action="{{ url_for('login')}}">
-        {{ form.hidden_tag() }}
-        <div>
-            {{ form.username.label }}
-            {{ form.username }}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-box-arrow-in-right"></i> Вход в систему
+                    </h3>
+                </div>
+
+                <div class="card-body p-4">
+                    <form method="POST" action="">
+                        {{ form.hidden_tag() }}
+
+                        <!-- Поле: Имя пользователя -->
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.username.label }}</label>
+                            {{ form.username(class="form-control", placeholder="Введите имя пользователя") }}
+
+                            {% if form.username.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.username.errors %}
+                                <i class="bi bi-exclamation-circle"></i> {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Поле: Пароль -->
+                        <div class="mb-4">
+                            <label class="form-label">{{ form.password.label }}</label>
+                            {{ form.password(class="form-control", placeholder="Введите пароль") }}
+
+                            {% if form.password.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.password.errors %}
+                                <i class="bi bi-exclamation-circle"></i> {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Кнопка отправки -->
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+                    </form>
+
+                    <!-- Ссылки -->
+                    <div class="mt-4 text-center">
+                        <p class="mb-2">Нет аккаунта?
+                            <a href="{{ url_for('register') }}" class="text-decoration-none fw-bold">
+                                Зарегистрируйтесь
+                            </a>
+                        </p>
+                        <p class="mb-0">
+                            <a href="{{ url_for('index') }}" class="text-decoration-none">
+                                <i class="bi bi-arrow-left"></i> На главную
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            {{ form.password.label }}
-            {{ form.password }}
-        </div>
-        <div>
-            {{ form.submit }}
-        </div>
-    </form>
+    </div>
+</div>
 {% endblock %}
